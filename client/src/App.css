@@ -1,0 +1,898 @@
+/* =====================================
+   STICQR STICKER LOCK SYSTEM
+   DO NOT ADD HEX COLORS
+   DO NOT ADD GRAY
+   DO NOT ADD SHADOWS
+   ONLY USE STICKER TOKENS
+===================================== */
+
+:root {
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink);
+  --icon-color: var(--ink);
+}
+
+.dark {
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink);
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  background: var(--ink);
+  user-select: none;
+  -webkit-user-select: none;
+  overscroll-behavior-y: none;
+}
+
+.surface {
+  padding: clamp(12px, 4vw, 24px);
+  border-radius: 28px;
+  transition: background 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+.page {
+  min-height: 100vh;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* legacy themed surface variants removed in sticker lock mode */
+
+.name-input {
+  font-size: 28px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  background: transparent;
+}
+
+.quantity {
+  font-size: 48px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.subtext {
+  text-align: center;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+}
+
+/* capacity + unit inputs now styled via inline sticker tokens */
+
+.slider {
+  margin-top: 16px;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  position: relative;
+  touch-action: none;
+  background: none;
+  transition: background 0.15s ease;
+}
+
+.stock-zone {
+  height: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stock-inner {
+  width: 100%;
+  position: relative;
+}
+
+/* Stable stock stage */
+.stock-stage {
+  position: relative;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stock-status,
+.stock-measured {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 200ms ease;
+}
+
+.stock-measured {
+  gap: 18px;
+}
+
+.stock-status.hidden,
+.stock-measured.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.status-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-item {
+  font-size: 18px;
+  transform: scale(0.85);
+  transition: all 220ms cubic-bezier(.2,.8,.2,1);
+  cursor: pointer;
+}
+
+.stock-view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s ease;
+}
+
+.status-segment {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 260px;
+  padding: 3px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.status-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 25%;
+  border-radius: 999px;
+  background: transparent;
+  transition: transform 0.2s ease;
+}
+
+.status-segment button {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 0;
+  color: inherit;
+}
+
+.status-segment button.active {
+  font-weight: 600;
+  color: inherit;
+}
+
+/* wheel styles removed in favor of appliance-style status stack */
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+  transition: transform 0.1s ease;
+}
+
+.add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  font-size: 22px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 24px;
+  margin-bottom: 20px;
+
+  transition: all 0.2s ease;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+}
+
+.attr-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  transition: background 0.2s ease;
+}
+
+.attr-row.editing {
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.attr-label {
+  font-size: 13px;
+  color: var(--vinyl);
+}
+
+.attr-value {
+  font-weight: 500;
+  color: var(--vinyl);
+}
+
+.attr-label,
+.attr-value {
+  text-align: left;
+}
+
+.attr-input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  outline: none;
+}
+
+.date-tile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-day {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.date-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.date-month {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.date-year {
+  font-size: 11px;
+}
+
+.attr-type {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  margin-left: 8px;
+}
+
+.attr-type:hover {
+  opacity: 1;
+}
+
+.attr-row.empty {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+  padding: 12px 0;
+  gap: 12px;
+}
+
+.attr-row.empty input {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.attributes-section {
+  margin-top: 20px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-selector {
+  height: 80px;
+  flex-shrink: 0;
+  padding: 14px 0 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  background: var(--ink);
+}
+
+.handheld-block {
+  height: 100vh;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.handheld-card {
+  background: var(--vinyl);
+  color: var(--ink);
+  padding: 32px;
+  border-radius: 28px;
+  text-align: center;
+  max-width: 360px;
+}
+
+.handheld-card h1 {
+  margin-bottom: 16px;
+}
+
+.handheld-card p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.attributes-inner {
+  width: 100%;
+  max-width: 360px;
+}
+
+.attributes-inner::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-bottom: 16px;
+}
+
+.custom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.attribute-tile {
+  border-radius: 14px;
+  padding: 0 14px;
+  height: 48px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.attr-label {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.attr-value {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.attr-action {
+  font-size: 18px;
+  color: var(--vinyl);
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+  align-self: flex-end;
+  transition: opacity 0.15s ease;
+
+}
+
+.attr-action:hover {
+  opacity: 1;
+}
+
+.type-selector-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 6px 4px;
+}
+
+.type-small-btn {
+  font-size: 16px;
+  color: var(--ink);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.type-small-btn:hover {
+  opacity: 1;
+}
+
+.type-selector {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.type-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.type-icon:hover {
+  opacity: 1;
+}
+
+.type-icon.active {
+  opacity: 1;
+}
+
+.attr-delete,
+.delete-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  color: inherit;
+}
+
+.attr-delete:hover,
+.delete-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.drag-handle {
+  cursor: grab;
+  font-size: 16px;
+  opacity: 0.4;
+  padding: 0 6px;
+  margin-right: 8px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.attr-move {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.attr-move button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.4;
+  padding: 2px;
+  transition: opacity 0.2s ease;
+}
+
+.attr-move button:hover {
+  opacity: 1;
+}
+
+.attr-move button:disabled {
+  opacity: 0.15;
+  cursor: default;
+}
+
+.attr-confirm {
+  display: flex;
+  gap: 6px;
+}
+
+.attr-cancel,
+.attr-confirm-delete {
+  border: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* attribute cancel/confirm button colors now via sticker tokens in JSX */
+
+.attr-inline-confirm {
+  width: 100%;
+  background: transparent;
+  border-radius: 12px;
+  padding: 10px 12px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.attr-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.clear-btn {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.clear-btn:hover {
+  opacity: 1;
+}
+
+/* clear button color handled via sticker tokens */
+
+/* legacy modal visuals superseded by sticker-mode inline overlays */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.modal-card {
+  border-radius: 24px;
+  padding: 24px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  animation: scaleIn 0.2s ease forwards;
+}
+
+.modal-card h3 {
+  margin: 0 0 12px 0;
+}
+
+.modal-card p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 16px;
+  outline: none;
+}
+
+.modal-primary {
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.modal-primary:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Embedded creation panel */
+.creation-panel {
+  margin-top: 20px;
+  padding: 24px;
+  border-radius: 24px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.creation-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.creation-input-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sheet-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border-radius: 16px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+/* sheet-input colors now via inline sticker tokens */
+
+.creation-primary {
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+
+.creation-primary:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.creation-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.creation-cancel {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.attribute-area {
+  min-height: 140px;       /* flexible internal edit zone */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 16px;
+  transition: opacity 0.2s ease;
+  position: relative;      /* for layered edit/grid */
+  overflow: hidden;        /* prevent vertical expansion */
+}
+
+.creation-panel {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-cancel {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-confirm {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+/* BOTTOM SHEET REMOVED - now using inline creation panel */
+@keyframes panelIn {
+  from {
+    transform: scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* body background now supplied by sticker tokens; root sizing kept minimal */
+
+input,
+textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.surface {
+  padding: clamp(12px, 4vw, 24px);
+  border-radius: 28px;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* legacy surface theme variants removed in sticker mode */
+.name-input::placeholder {
+  color: var(--ink);
+  opacity: 0.4; /* subtle, but not grey */
+}
+.name-input {
+  font-size: 28px;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  background: transparent;
+}
+
+.quantity {
+  font-size: 48px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.subtext {
+  text-align: center;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: inherit;   /* add this */
+  opacity: 0.7;
+}
+
+/* capacity/unit inputs are styled inline with sticker tokens */
+
+.slider {
+  margin-top: 16px;
+  width: 100%;
+  height: 40px;                 /* thicker */
+  border-radius: 999px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+/* Base gradient handles all themes now */
+
+/* optional track hooks no longer needed with gradient base */
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 0px;
+  transition: transform 0.1s ease;
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(1.1);
+}
+
+.add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  font-size: 22px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 24px;
+  margin-bottom: 20px;
+
+  transition: all 0.2s ease;
+}
+
+.surface.light .add-btn,
+/* legacy themed add-btn colors removed; add-btn colors now sticker-driven */
+
+.add-btn:active {
+  transform: scale(0.92);
+}
+
+.format-btn {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.format-btn:hover {
+  opacity: 1;
+}
+
+/* legacy graphite-specific format-btn removed */

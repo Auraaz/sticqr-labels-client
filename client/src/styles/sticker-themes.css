@@ -1,0 +1,37 @@
+/* THEME MODEL
+   Each theme defines:
+   --ink   (deep print color)
+   --vinyl (light sticker body)
+   --accent (always white)
+*/
+
+:root {
+  --ink: #c62828;
+  --vinyl: #e9b6b6;
+  --accent: #ffffff;
+}
+
+/* TOMATO */
+[data-theme="tomato"] {
+  --ink: #C92A2A;
+  --vinyl: #E6B3B3;
+}
+
+/* GRAPHITE */
+[data-theme="graphite"] {
+  --ink: #2B2E34;
+  --vinyl: #D6D8DC;
+}
+
+/* BEIGE */
+[data-theme="beige"] {
+  --ink: #8C5E3C;
+  --vinyl: #F1E2D3;
+}
+
+/* GLASS (cool blue) */
+[data-theme="glass"] {
+  --ink: #1C7ED6;
+  --vinyl: #D0E8FF;
+}
+

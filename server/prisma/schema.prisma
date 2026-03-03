@@ -1,0 +1,22 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Container {
+  id               String   @id
+  content_name     String?
+  unit             String?
+  max_capacity     Float    @default(0)
+  current_quantity Float    @default(0)
+  attributes       Json     @default("[]")
+  skin             String   @default("light")
+  statusState      String   @default("empty")
+  mode             String   @default("status")
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}

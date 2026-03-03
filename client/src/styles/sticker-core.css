@@ -1,0 +1,11 @@
+/* =====================================
+   STICQR MATERIAL MODEL v1
+   Paper • Vinyl • Ink
+===================================== */
+
+:root {
+  --paper:  #FFFFFF;  /* Environment */
+  --vinyl:  #F3CACA;  /* Sticker body */
+  --ink:    #C92C2C;  /* Printed ink */
+}
+
